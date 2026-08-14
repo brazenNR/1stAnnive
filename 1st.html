@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://glyatte.github.io/for-my-arriv/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My kara 💗</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root{
+            --accent-1: 225,120,255; /* soft purple */
+            --accent-2: 120,220,200; /* seafoam */
+            --accent-3: 255,185,195; /* blush */
+            --glass-bg: rgba(255,255,255,0.55);
+            --glass-border: rgba(255,255,255,0.18);
+            --muted: #666;
+            --fg: #3b3b3b;
+        }
+
+        body {
+            /* 🌸 YOUR CUSTOM BACKGROUND FIXED HERE 🌸 */
+            background-image: url('https://i.pinimg.com/736x/1e/ae/49/1eae490d5ef25f8917bda4f850769d28.jpg'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            color: #4a4a4a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 15px;
+        }
+
+        #bg-music {
+            display: none;
+        }
+
+        /* FLOATING HEARTS ANIMATION */
+        .heart {
+            position: fixed;
+            color: #ffcad4;
+            font-size: 1.5rem;
+            animation: floatUp 6s linear infinite;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* FORCE EVERYTHING TO ABSOLUTE CENTER */
+        .main-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto !important; 
+            display: block;
+        }
+
+        /* SCREEN MANAGEMENT */
+        .screen {
+            display: none;
+            width: 100%;
+            text-align: center;
+            margin: 0 auto !important;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* BUTTONS */
+        .btn {
+            background: linear-gradient(135deg, rgba(var(--accent-3),1), rgba(255,140,175,1));
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 30px rgba(120,20,80,0.12), 0 2px 8px rgba(0,0,0,0.06) inset;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 14px 40px rgba(120,20,80,0.14);
+        }
+
+        .btn-reveal {
+            background-color: #fcebeb;
+            border: 2px solid #ffcad4;
+            color: #f76a8c;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            width: auto;
+        }
+
+        .btn-reveal:hover {
+            background-color: #ffcad4;
+        }
+
+        /* SCREEN 1: PASSWORD BOX */
+        .lock-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(6px) saturate(120%);
+            padding: 35px 25px;
+            border-radius: 25px;
+            box-shadow: 0 12px 40px rgba(16,8,32,0.08);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--glass-border);
+            margin: 0 auto !important;
+        }
+
+        .password-photo-frame {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px dashed rgba(255,255,255,0.14);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .password-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .lock-box h2 {
+            color: #f76a8c;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        #password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffcad4;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+            letter-spacing: 6px;
+            outline: none;
+            background: #fff;
+        }
+
+        #password-input:focus {
+            border-color: #ff8fa3;
+        }
+
+        #error-msg {
+            color: #de7a7a;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .shake { animation: shakeAnim 0.4s ease; }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* SCREEN 2: REVEAL PAGE */
+        .reveal-title {
+            font-size: 3.5rem;
+            color: #f76a8c;
+            margin-bottom: 15px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        /* SCREEN 3: WHITE CARDS STYLE */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            box-shadow: 0 12px 30px rgba(16,8,32,0.06);
+            text-align: left;
+            border-top: 5px solid rgba(var(--accent-3),0.18);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card h3 {
+            color: #f76a8c;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .hidden-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ffcad4;
+        }
+
+        .hidden-content.open {
+            display: block;
+        }
+
+        .hidden-content p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1rem;
+            white-space: pre-line;
+        }
+
+        .story-photo {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+            border: 1px dashed rgba(255,255,255,0.12);
+            border-radius: 12px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .story-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* POLAROID SYSTEM */
+        .moment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .polaroid {
+            background: var(--glass-bg);
+            padding: 10px 10px 20px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            border: 1px solid #fff0f3;
+            transition: transform 0.2s;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+        }
+
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:nth-child(odd) { transform: rotate(-2deg); }
+        .polaroid:hover { transform: rotate(0deg) translateY(-5px); z-index: 10; }
+        .polaroid:hover { box-shadow: 0 18px 40px rgba(40,10,60,0.12); filter: saturate(120%); }
+
+        .polaroid-image {
+            width: 100%;
+            height: 140px;
+            background: #fcebeb;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .polaroid-image img { width: 100%; height: 100%; object-fit: cover; }
+        .polaroid p { color: #666; font-size: 0.8rem; text-align: center; }
+
+        /* SCREEN 4: QUIZ STYLE */
+        .quiz-box {
+            background: var(--glass-bg);
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 12px 36px rgba(12,8,30,0.06);
+            text-align: left;
+            border: 2px solid #ffcad4;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto !important;
+        }
+
+        .quiz-box h2 { color: #f76a8c; margin-bottom: 15px; text-align: center; }
+        
+        .question-container { display: none; }
+        .question-container.active { display: block; }
+        
+        .question-text { font-size: 1.15rem; color: #4a4a4a; font-weight: bold; margin-bottom: 15px; }
+        
+        .option-btn {
+            background: #fff0f3;
+            border: 2px solid #ffcad4;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { background: #ffcad4; color: white; }
+        #quiz-result-box { text-align: center; display: none; }
+
+        /* SCREEN 5: CLOSING */
+        .final-box {
+            background: var(--glass-bg);
+            padding: 35px 25px;
+            border-radius: 25px;
+            box-shadow: 0 12px 36px rgba(12,8,30,0.06);
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto !important;
+        }
+
+        .final-box h2 { color: #f76a8c; font-size: 2rem; margin-bottom: 15px; }
+        .final-box p { color: #555; line-height: 1.7; font-size: 1.05rem; white-space: pre-line; }
+        /* FANTASY OUTLINE: magical gradient glow around boxes */
+        .fantasy-outline { position: relative; z-index: 1; border-radius: 20px; }
+            .fantasy-outline::after {
+                content: "";
+                position: absolute;
+                inset: -8px;
+                z-index: -1;
+                border-radius: inherit;
+                background: linear-gradient(120deg, rgba(180,133,255,0.60), rgba(135,224,210,0.55), rgba(255,180,200,0.55));
+                filter: blur(14px);
+                opacity: 0.6;
+                pointer-events: none;
+                mix-blend-mode: screen;
+                background-size: 300% 300%;
+                animation: fantasyShift 10s ease-in-out infinite;
+            }
+
+        @keyframes fantasyShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Subtle inner highlight to keep text readable */
+        .fantasy-outline::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border-radius: inherit;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+        /* Apply the same magical outline to existing box selectors (no HTML changes required) */
+        .lock-box, .password-photo-frame, .card, .polaroid, .quiz-box, .final-box {
+            position: relative;
+            z-index: 1;
+        }
+            .lock-box::after, .password-photo-frame::after, .card::after, .polaroid::after, .quiz-box::after, .final-box::after {
+                content: "";
+                position: absolute;
+                inset: -8px;
+                z-index: -1;
+                border-radius: inherit;
+                background: linear-gradient(120deg, rgba(180,133,255,0.60), rgba(135,224,210,0.55), rgba(255,180,200,0.55));
+                filter: blur(14px);
+                opacity: 0.6;
+                pointer-events: none;
+                mix-blend-mode: screen;
+                background-size: 300% 300%;
+                animation: fantasyShift 10s ease-in-out infinite;
+            }
+        .lock-box::before, .password-photo-frame::before, .card::before, .polaroid::before, .quiz-box::before, .final-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border-radius: inherit;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        /* Decorative star-sparkles overlay on the whole page */
+        .main-wrapper::before{
+            content: "";
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            pointer-events: none;
+            background-image: radial-gradient(rgba(255,255,255,0.85) 1px, transparent 2px), radial-gradient(rgba(255,255,255,0.6) 1px, transparent 2px);
+            background-size: 200px 200px, 120px 120px;
+            background-position: 10% 20%, 70% 80%;
+            opacity: 0.06;
+            mix-blend-mode: screen;
+            z-index: 5;
+            animation: starsDrift 40s linear infinite;
+        }
+        @keyframes starsDrift{ from{transform:translateY(0)} to{transform:translateY(-40px)} }
+
+        /* Heart glow improvements */
+        .heart{ font-size:1.6rem; filter: drop-shadow(0 6px 14px rgba(255,150,180,0.12)); }
+        .heart::after{ content:""; position:absolute; inset:-8px; filter: blur(8px); background: radial-gradient(circle, rgba(255,170,200,0.6), rgba(255,120,180,0)); z-index:-1; border-radius:50%; }
+
+        /* Subtle page vignette to help boxes pop */
+        body::after{ content:""; position:fixed; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.18) 100%); opacity:0.25; z-index:4; }
+
+        /* Slightly richer typography */
+        h1,h2,h3{ text-shadow: 0 1px 0 rgba(255,255,255,0.6); color:var(--fg); }
+
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop preload="auto" aria-hidden="true">
+        <source src="assets/audio/best-part.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="main-wrapper">
+
+        <div id="screen-1" class="screen active">
+            <div class="lock-box" id="lock-box">
+                <div class="password-photo-frame">
+                    <img src="https://scontent.fcrk2-1.fna.fbcdn.net/v/t1.15752-9/772685127_1401677278557357_6698478634912182980_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1152&ctp=s2048x1152&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGYtOHnNpG1LRpLIAk6w-5uYvps_efMA7Ji-mz958wDspgIekwl62U59cBE8vlcXVfj2B_grtagGhsuOFmogEbw&_nc_ohc=G3pxqfwkFEMQ7kNvwEVrNPA&_nc_oc=AdpH_Of0F2BRJ3paDGvIM_g61IySlY-3g8Fu_3SUJtyEhNOfAvh7iMp8-XCKoY08GY0&_nc_zt=23&_nc_ht=scontent.fcrk2-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6AFpPtVMUfs3dmCk0uR7etwW5UtdSX8vs2vyE24DI3jxlA&oe=6AA68A6D" alt="Lock Cover">
+                </div>
+                <h2>Confidential 🔐</h2>
+                <input type="password" id="password-input" placeholder="••••" maxlength="4">
+                <button class="btn" onclick="checkPassword()">Enter</button>
+                <div id="error-msg">Wrong password! Try again baby... 😉</div>
+            </div>
+        </div>
+
+        <div id="screen-2" class="screen">
+            <h1 class="reveal-title">Hi Baby! 💗</h1>
+            <p style="font-size: 1.15rem; color: #666; margin-bottom: 25px;">I made this secret digital universe just for us.</p>
+            <button class="btn" style="max-width: 280px; margin: 0 auto;" onclick="enterStory()">Enter Our Story</button>
+        </div>
+
+        <div id="screen-3" class="screen">
+            <header style="margin-bottom: 25px;">
+                <h1 style="color: #f76a8c; font-size: 2.3rem; margin-bottom: 5px;">Our Anniversary Space ❤️</h1>
+                <p style="color: #777; font-size: 0.95rem;">Click each section below to read my secret notes...</p>
+            </header>
+
+            <div class="card">
+                <h3>🌱 How We Started</h3>
+                <button class="btn-reveal" onclick="toggleSection(&#39;content-start&#39;, this)">Click to read →</button>
+                <div id="content-start" class="hidden-content">
+                    <p>If you told grade 7 brayden that he would have his 1st anniversay with kara now, he wouldn't believe a word you'll say. I still remember that time I wasn't really searching for love anytime soon and you came right through my life, and there was me not expecting anything at all until this point. My love for you ain't going no where. I'm glad we found our back from eachother, because the heavens knew we needed eachother. Life with you feels like a fairytale. I still remember getting to know more of you through volleyball and If you were to ask me, you prolly were the reason I kept going not just through sports but as hope and light through my everydays. It wasn't just motivation but you kept through acting as my discipline. </p>
+                    <div class="story-photo">
+                        <img src="https://scontent.fcrk2-1.fna.fbcdn.net/v/t1.15752-9/770617435_1572332244337937_4513835574426919422_n.png?stp=dst-png&cstp=mx1079x1004&ctp=s1079x1004&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEyu_3Xda217sjldJpDM5B_2vt3APpaB33a-3cA-loHfQxf-6A8i_UlLcOfzg0Kpk11RbhAUkdOZ2BNpSPakgnb&_nc_ohc=pdELvZnSRHkQ7kNvwFsrg6f&_nc_oc=AdrQ8_A2oxpZhR_BtLEXlXJ5HVJf7xj-4nMcW7D5yeXYwI8K_75uHYy2js9nTrYc8Yg&_nc_zt=23&_nc_ht=scontent.fcrk2-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6AFWW6MyxKE6pP0cNWB8RjOAL_avO3sU0UOE1KG8NgqU7A&oe=6AA67ED3" alt="Our Start">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📸 Fave Moments Together</h3>
+                <button class="btn-reveal" onclick="toggleSection(&#39;content-fave&#39;, this)">Click to reveal scrapbook →</button>
+                <div id="content-fave" class="hidden-content">
+                    <div class="moment-grid">
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-4.fna.fbcdn.net/v/t1.15752-9/769412115_1684760595965539_1761844265208956400_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1167&ctp=s1080x1167&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHDnFfVS8_Q3UyInY-Mfdpz-bpmnvG0wgf5umae8bTCByRdcyoKDVAh45H_aLoYi0eLFJ-laUIZDNwZqeVmXfZg&_nc_ohc=3WP6CzLKpZ0Q7kNvwFdMolM&_nc_oc=Adr1v9U1kDoei16SBGNxBVtfpqVYkAYOnPVtFrBRusmCHUhy9J6CSm5d0mJB_Qo7ZPg&_nc_zt=23&_nc_ht=scontent.fcrk2-4.fna&_nc_ss=7b2a8&oh=03_Q7cD6AHvjb7qUSooSlg6g0VfceWpridlHeDVKNR4pswYm1trTQ&oe=6AA683DB" alt="1"></div><p>Baby denden 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-1.fna.fbcdn.net/v/t1.15752-9/774148132_2172828096996025_8640656886696227449_n.jpg?stp=dst-jpg_tt6&cstp=mx365x547&ctp=s365x547&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFfAv46XqjBzHnzjsq3z_OmFYW7N_CpZ_4Vhbs38Kln_ngDaDKev18LjEw8yORy8sxtxHlOo6BcNdSSMuWYAwCI&_nc_ohc=MjCBQQuv3AkQ7kNvwHJKuGh&_nc_oc=AdrQkXzkSvHr-tWcxsbmXa7bfChCuLf0htSCDrdobAv8dHs4NAMDB4p-1yuxCPIKwHY&_nc_zt=23&_nc_ht=scontent.fcrk2-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6AEbCAJ0mx99nGv2biSM7-gQnNuOOIiHooJ9nl4nBz3jwQ&oe=6AA66D59"2"></div><p>Baby kara 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-3.fna.fbcdn.net/v/t1.15752-9/768786391_2465539060600232_959536784566476947_n.jpg?stp=dst-jpg_tt6&cstp=mx976x1920&ctp=s976x1920&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGCWlIirywrvFkVDgm0HgYyxtqXMTV7o0HG2pcxNXujQYyfkmeAeLnloLDKBXi2Y_Be_DZioPF6SstTsXpmQRNe&_nc_ohc=H9D-zF7ZbLYQ7kNvwHkuFc5&_nc_oc=Adqvpa2LCsFRYzRVW08u1bfnD7j41eKkAuSggJX27eUx2qjqlDpRh-SvyN0LAgi3Kl8&_nc_zt=23&_nc_ht=scontent.fcrk2-3.fna&_nc_ss=7b2a8&oh=03_Q7cD6AF2DeuSpfRXm7I78DPZwKQqatmM5wWkzsVw_V7Qsfpsfg&oe=6AA66CB2" alt="3"></div><p>kara naging circle 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-4.fna.fbcdn.net/v/t1.15752-9/703096951_1094171399962989_7096076268187444150_n.png?stp=dst-png&cstp=mx2160x2880&ctp=s2048x2048&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeF9KItthw4QdU4KvCyAS70sOu6btUQfYdc67pu1RB9h1ztg-BXpUUw6eF8k5C7QvjsIZ0GzZ2zBWycbmFbPT9cc&_nc_ohc=jAgCzDmhBjUQ7kNvwFEJ1Y2&_nc_oc=AdorwxGlzNAflGBLtSW0PGuYQuWEFlIhazj0k1pLpZd-HKZ8iSRqPdeXi1j6hKQaknE&_nc_zt=23&_nc_ht=scontent.fcrk2-4.fna&_nc_ss=7b2a8&oh=03_Q7cD6AGk_Oz_R_Be5nf2_FDOsy1iMkX3sXRmuPYhc7f6kxYFSA&oe=6AA678D7" alt="4"></div><p>grad pic 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-4.fna.fbcdn.net/v/t1.15752-9/705275505_1574633787363417_3991188240856412766_n.png?stp=dst-png&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHp2_vEtbRNaaUfyYT9NwMXG8a_Zs8EQcIbxr9mzwRBwuK2ZuOvh9j2qgVSivHXoX9VuLlBwcVKT-WWtLQMhXTI&_nc_ohc=8GGOQ2tEYrsQ7kNvwGx0jIv&_nc_oc=AdqwoCOjcrU5NF_TKU1G7H5PL1C--0C7_QZRJMvsqALmlABGOZL0JB-k_1WjZ-2xlRQ&_nc_zt=23&_nc_ht=scontent.fcrk2-4.fna&_nc_ss=7b2a8&oh=03_Q7cD6AGS0xl2pnI777jYpE5gz_J1N-EhGjNFnNqpIt0jlZB50A&oe=6AA684E7" alt="5"></div><p>michi 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk4-2.fna.fbcdn.net/v/t1.15752-9/703653001_1879940496002409_7828020712856904336_n.png?stp=dst-png&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeESJg75Ai8GDShoiAQdBssNTkUgJInM4xZORSAkiczjFt5pnCmQoXdJxBIKsTgB_uX3ZT3QrtmTg13PZHkBarz-&_nc_ohc=g37PDiRWykQQ7kNvwG1wJ4-&_nc_oc=AdoMou_9JaAPk_8doRpzgIUHpkIHci_wEbgLX0p1aCkaTcSlafmqZR7aSmFg4qrrsGg&_nc_zt=23&_nc_ht=scontent.fcrk4-2.fna&_nc_ss=7b2a8&oh=03_Q7cD6AGir_IyIjc8O-oDqDCJwp0ZBw9YjYVwKKswlEh-kvIFmg&oe=6AA66DFE" alt="6"></div><p>oreo 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-4.fna.fbcdn.net/v/t1.15752-9/708260402_2212143189192582_1361443950655881061_n.png?stp=dst-png&cstp=mx556x391&ctp=s556x391&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGL420N9QWTm_FTaeDv7ApOMvbFAnhBv8oy9sUCeEG_yr8BnALgLjBJ4q2nfWHGQ8Je5LogATzdLXXkAk3wcMC2&_nc_ohc=TFcnzPLxdioQ7kNvwHQEsFZ&_nc_oc=AdqsmueY9qfQ9EHR3rBGg-UrY4t6GWF2pQ5jeNcbItKEKqbcRoHifctrGvyoSJRHFTU&_nc_zt=23&_nc_ht=scontent.fcrk2-4.fna&_nc_ss=7b2a8&oh=03_Q7cD6AEs1230_msk3cf6E-Mt90Im9d13feeCbozK0y0KSjNijw&oe=6AA68FAC" alt="7"></div><p>Yjan 🤑</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-1.fna.fbcdn.net/v/t1.15752-9/773519295_1769544114070621_6779926611681338713_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1874&ctp=s1080x1874&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFIitRyGSaVKh5DZ2MHCUX-iYXr-g-gsKOJhev6D6Cwo_UHE17RxoAgexHw8XQUoEYiJsockPLAHNYU4xB_Qump&_nc_ohc=I4lHjrXt0gIQ7kNvwGZBnOv&_nc_oc=AdonXaSuq9FphW8jD0WBKneCNkaUOOqluNRwUmB822WhJLaUUUHklcI8xw2_XjBSSwI&_nc_zt=23&_nc_ht=scontent.fcrk2-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6AGiI5Rw7wdMjBOJFSyi1Wk-MsFKQeee4XmXCtcQNvgWUA&oe=6AA6757F" alt="8"></div><p>kara with mr oswaldo 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk2-3.fna.fbcdn.net/v/t1.15752-9/771707712_1798420487859709_3736446471538111753_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s2048x2048&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFcZij7ud-KXygpzg6UeTJNnOzRQJ0iBh-c7NFAnSIGHx4liqA3qLRH0D5n6ivCYmjVKM9x4wRcYVWXNQ1Dwbjw&_nc_ohc=LEn1yWyESFMQ7kNvwG7htGt&_nc_oc=AdpBxUipp5Y9ISKgdfBz_-4upRvbpGj3lX1B1c1Tt3O5D_TSByt4FIkXIxNK9R5ZGwA&_nc_zt=23&_nc_ht=scontent.fcrk2-3.fna&_nc_ss=7b2a8&oh=03_Q7cD6AHc8qFwpF32m5SbCatIo62z3FiqB-E1CYfj3jNTLnYxkw&oe=6AA67B9B" alt="9"></div><p>kara with bouquet 💗</p></div>
+                        <div class="polaroid"><div class="polaroid-image"><img src="https://scontent.fcrk4-1.fna.fbcdn.net/v/t1.15752-9/772352742_1033560142856584_3934926457723240048_n.png?stp=dst-png&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFjYjUwzoGfTIalcckPW_BjwY2XKeGuL5jBjZcp4a4vmKSGdOZag7wlx916MlKGS1J2BaECP7HKqKiCx8UyzLQl&_nc_ohc=hGfeB3wWrxIQ7kNvwEG2ns2&_nc_oc=AdrHB7N-p_55ojClqg6SMVrn4hmLYWvfGH-3R3FZGL2beA3x84rKMkc7GK_NFZT5_8U&_nc_zt=23&_nc_ht=scontent.fcrk4-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6AHRbfpuwVadgWoAhXhb5oiIs2vg3V1pVJz9Bvh99rU0Rw&oe=6AA6A8A2" alt="10"></div><p>first prom together ❤️</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💌 Especially made 4 u!</h3>
+                <button class="btn-reveal" onclick="toggleSection(&#39;content-love&#39;, this)">Click to read →</button>
+                <div id="content-love" class="hidden-content">
+                    <p>Happy anniversary babyyy 🤍
+                       Hi my loves, I just want to say that im grateful for having you in my life. From the moment we talked and gotten close until now, I love you so so much with all my heart and I'll continue to do so. I hope in every lifetime its you and me. I know I might not be the best dancer, but through every prom, every ball dance, I'd lend my hand and be your dance partner for life. Much love, your baby denden. :) muaaah
+                     </p>
+                </div>
+            </div>
+
+            <button class="btn" style="background-color: #f76a8c; margin-top: 15px;" onclick="changeScreen(3, 4)">Take Our Quiz! 🧠➡️</button>
+        </div>
+
+        <div id="screen-4" class="screen">
+            <div class="quiz-box">
+                <h2>Our Relationship Quiz! 💗</h2>
+                <p style="text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 20px;">Let's see if you remember things baby!</p>
+                
+                <div id="quiz-q1" class="question-container active">
+                    <p class="question-text">1. Where was our very first official date?</p>
+                    <button class="option-btn" onclick="handleQuizAnswer(1, true)">Boardwalk</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(1, false)">Ayala</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(1, false)">Baguio</button>
+                </div>
+
+                <div id="quiz-q2" class="question-container">
+                    <p class="question-text">2. What’s my favorite thing about you?</p>
+                    <button class="option-btn" onclick="handleQuizAnswer(2, false)">[Your Arms]</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(2, false)">[Your scent]</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(2, false)">[Your underarm]</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(2, true)">[All of the above]</button>
+                </div>
+
+                <div id="quiz-q3" class="question-container">
+                    <p class="question-text">3. Who said "I love you" first?</p>
+                    <button class="option-btn" onclick="handleQuizAnswer(3, false)">yung mestiza</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(3, true)">yung chinito</button>
+                </div>
+
+                <div id="quiz-q4" class="question-container">
+                    <p class="question-text">4. What is our absolute favorite thing to do together?</p>
+                    <button class="option-btn" onclick="handleQuizAnswer(4, false)">[insta spam]</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(4, true)">[romcom marathons]</button>
+                </div>
+
+                <div id="quiz-q5" class="question-container">
+                    <p class="question-text">5. How long have we officially been together today?</p>
+                    <button class="option-btn" onclick="handleQuizAnswer(5, true)">[8,767 hours]</button>
+                    <button class="option-btn" onclick="handleQuizAnswer(5, false)">[9,406 HOURS]</button>
+                </div>
+
+                <div id="quiz-result-box">
+                    <h3 style="color: #ff8fa3; margin-bottom: 10px; font-size: 1.3rem;">Quiz Completed! 🎉</h3>
+                    <p style="color: #666; margin-bottom: 15px;">You passed perfectly! Ready for your last letter?</p>
+                    <button class="btn" onclick="changeScreen(4, 5)">Next ➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-5" class="screen">
+            <div class="final-box">
+                <h2>To More Memories ✨</h2>
+                <p>Happy Anniversary again, my love! 
+
+                Thank you for checking out my little website surprise. I hope it made you smile as much as you make me smile every day. 
+
+                I love you endlessly kara, always and forever. 💗 
+                    
+                Made with love by den, for the person who made life feel softer. 🤍
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // CORE NAVIGATION SYSTEM
+        function changeScreen(oldNum, newNum) {
+            document.getElementById(`screen-${oldNum}`).classList.remove('active');
+            document.getElementById(`screen-${newNum}`).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // PASSWORD VERIFICATION (0524)
+        function checkPassword() {
+            const val = document.getElementById('password-input').value;
+            const targetBox = document.getElementById('lock-box');
+            const alertMsg = document.getElementById('error-msg');
+
+            if (val === '0815') {
+                changeScreen(1, 2);
+                setInterval(spawnHeart, 450);
+            } else {
+                targetBox.classList.add('shake');
+                alertMsg.style.display = 'block';
+                document.getElementById('password-input').value = '';
+                setTimeout(() => { targetBox.classList.remove('shake'); }, 400);
+            }
+        }
+
+        // KEYBOARD ENTER LISTENER
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { checkPassword(); }
+        });
+
+        // BEGIN MUSIC AND LOAD MAIN SCREEN
+        function enterStory() {
+            changeScreen(2, 3);
+            const player = document.getElementById('bg-music');
+            player.play().catch(err => console.log("Audio waiting for explicit unlock flag..."));
+        }
+
+        // ACCORDION TOGGLE
+        function toggleSection(elementId, btnControl) {
+            const drawer = document.getElementById(elementId);
+            drawer.classList.toggle('open');
+            if (drawer.classList.contains('open')) {
+                btnControl.innerText = 'Close section ↑';
+            } else {
+                btnControl.innerText = 'Click to read →';
+            }
+        }
+
+        // QUIZ LOGIC
+        let activeQ = 1;
+        function handleQuizAnswer(qNum, isCorrectAnswer) {
+            if (isCorrectAnswer) {
+                alert("Correct answer! pretty girl 🥰");
+            } else {
+                alert("Wrong answer dummy!! Guess again 😂 Try a different choice.");
+                return;
+            }
+
+            document.getElementById(`quiz-q${qNum}`).classList.remove('active');
+            activeQ++;
+
+            if (activeQ <= 5) {
+                document.getElementById(`quiz-q${activeQ}`).classList.add('active');
+            } else {
+                document.getElementById('quiz-result-box').style.display = 'block';
+            }
+        }
+
+        // BACKGROUND HEARTS ENGINE
+        function spawnHeart() {
+                const h = document.createElement('div');
+                h.classList.add('heart');
+                h.innerHTML = '💗';
+                const hue = Math.floor(320 + Math.random() * 60) % 360; // pink/purple range
+                h.style.left = Math.random() * 100 + 'vw';
+                const dur = (Math.random() * 4 + 5).toFixed(2);
+                h.style.animationDuration = dur + 's';
+                const size = (Math.random() * 1.4 + 0.9).toFixed(2);
+                h.style.fontSize = size + 'rem';
+                h.style.color = `hsl(${hue} 80% 68%)`;
+                h.style.opacity = 0.95;
+                h.style.filter = `drop-shadow(0 8px 18px hsla(${hue} 80% 60% / 0.22))`;
+                document.body.appendChild(h);
+                setTimeout(() => { h.remove(); }, (parseFloat(dur) + 1) * 1000);
+        }
+    </script>
+
+</body></html>
